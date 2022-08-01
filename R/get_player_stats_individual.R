@@ -87,7 +87,7 @@ get_player_stats_individual <- function(..., progress = TRUE, strip_redundancy =
         rvest::html_text() %>%
         magrittr::extract(1:9) %>%
         stringr::str_squish() %>%
-        purrr::set_names("birthday", "position_", "age", "height", "birth_country", "weight", "nation", "shot_handedness", "youth_team") %>%
+        purrr::set_names("birthday", "position_", "age", "height", "birth_place", "weight", "birth_country", "shot_handedness", "youth_team") %>%
         t() %>%
         as.data.frame() %>%
         as_tibble() %>%
@@ -105,10 +105,11 @@ get_player_stats_individual <- function(..., progress = TRUE, strip_redundancy =
         select(-c(feet_tall, inches_tall, age, youth_team))
 
       skater_or_goalie <- page %>%
-        rvest::html_node('[class="table table-striped table-condensed table-sortable player-stats highlight-stats"]') %>%
-        rvest::html_table()
+        rvest::html_node('.order-sm-1 .ep-text-color--black') %>%
+        rvest::html_text() %>%
+        stringr::str_squish()
 
-      if ("GAA" %in% colnames(skater_or_goalie)) {
+      if (skater_or_goalie == "G") {
 
         player_statistics <- page %>%
           rvest::html_node('[class="table table-condensed table-sortable player-stats goalie-stats highlight-stats"]') %>%
