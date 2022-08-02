@@ -76,7 +76,7 @@ get_player_stats_individual <- function(..., progress = TRUE, strip_redundancy =
     }
 
     else {
-      seq(4, 6, by = 0.001) %>%
+      seq(2, 4, by = 0.001) %>%
         sample(1) %>%
         Sys.sleep()
 
@@ -110,6 +110,37 @@ get_player_stats_individual <- function(..., progress = TRUE, strip_redundancy =
         stringr::str_squish()
 
       if (skater_or_goalie == "G") {
+
+        test.read <- page %>%
+          rvest::html_node('[class="table table-condensed table-sortable player-stats goalie-stats highlight-stats"]')
+        if (is.na(test.read)) {
+          all_data <-
+            tibble(
+              shot_handedness = NA,
+              birth_place = NA,
+              birth_country = NA,
+              birthday = NA,
+              height = NA,
+              weight = NA,
+              age = NA,
+              name_ = NA,
+              position_ = NA,
+              player_url_ = NA
+            )
+
+          player_statistics <- NA %>%
+            enframe(name = NULL) %>%
+            purrr::set_names("captaincy_") %>%
+            tidyr::nest_legacy()
+
+          all_data <- all_data %>%
+            bind_cols(player_statistics) %>%
+            rename(player_statistics = data)
+
+          if (progress) {pb$tick()}
+
+          return(all_data)
+        }
 
         player_statistics <- page %>%
           rvest::html_node('[class="table table-condensed table-sortable player-stats goalie-stats highlight-stats"]') %>%
@@ -150,6 +181,37 @@ get_player_stats_individual <- function(..., progress = TRUE, strip_redundancy =
       }
 
       else {
+
+        test.read <- page %>%
+          rvest::html_node('[class="table table-condensed table-sortable player-stats skater-stats highlight-stats"]')
+        if (is.na(test.read)) {
+          all_data <-
+            tibble(
+              shot_handedness = NA,
+              birth_place = NA,
+              birth_country = NA,
+              birthday = NA,
+              height = NA,
+              weight = NA,
+              age = NA,
+              name_ = NA,
+              position_ = NA,
+              player_url_ = NA
+            )
+
+          player_statistics <- NA %>%
+            enframe(name = NULL) %>%
+            purrr::set_names("captaincy_") %>%
+            tidyr::nest_legacy()
+
+          all_data <- all_data %>%
+            bind_cols(player_statistics) %>%
+            rename(player_statistics = data)
+
+          if (progress) {pb$tick()}
+
+          return(all_data)
+        }
 
         player_statistics <- page %>%
           rvest::html_node('[class="table table-condensed table-sortable player-stats skater-stats highlight-stats"]') %>%

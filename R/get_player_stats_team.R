@@ -22,7 +22,7 @@
 #' @export
 #' @import dplyr
 #'
-get_player_stats_team <- function(..., progress = TRUE, other = "trevor") {
+get_player_stats_team <- function(..., progress = TRUE, other = "") {
 
   if (progress) {
 
@@ -34,7 +34,7 @@ get_player_stats_team <- function(..., progress = TRUE, other = "trevor") {
 
   .get_player_stats_team <- function(team_url, team, league, season, ...) {
 
-    seq(4, 6, by = 0.001) %>%
+    seq(2, 4, by = 0.001) %>%
       sample(1) %>%
       Sys.sleep()
 
